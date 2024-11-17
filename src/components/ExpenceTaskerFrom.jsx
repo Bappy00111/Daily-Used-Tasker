@@ -1,29 +1,40 @@
 import React, { useState } from "react";
 
-const ExpenceTaskerFrom = () => {
+const ExpenceTaskerForm = ({onSave}) => {
   const [formData, setFormData] = useState({
-    type: "Expense", // Default value for "Expense" or "Income"
+    type: "Expense", // Default value
     category: "",
     amount: "",
     date: "",
   });
 
-  // Handle input change
+  const categories = {
+    Expense: [
+      "Education",
+      "Food",
+      "Health",
+      "Bill",
+      "Insurance",
+      "Tax",
+      "Transport",
+      "Telephone",
+    ],
+    Income: ["Salary", "Freelance", "Investment", "Others"],
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle type selection (Expense/Income)
   const handleTypeChange = (type) => {
-    setFormData({ ...formData, type });
+    setFormData({ ...formData, type, category: "" }); // Reset category when type changes
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form Data:", formData);
-    // API call or further processing goes here
+    // API call or further processing
   };
 
   return (
@@ -34,10 +45,10 @@ const ExpenceTaskerFrom = () => {
 
       <form onSubmit={handleSubmit}>
         {/* Expense/Income Toggle */}
-        <div className="flex divide-x divide-slate-400/20 overflow-hidden rounded-md bg-white text-[0.8125rem] font-medium leading-5 text-slate-700 shadow-sm ring-1 ring-slate-700/10 mt-6">
+        <div className="flex divide-x divide-slate-400/20 overflow-hidden rounded-md bg-white text-sm font-medium leading-5 text-slate-700 shadow-sm ring-1 ring-slate-700/10 mt-6">
           <div
             className={`cursor-pointer text-center flex-1 px-4 py-2 ${
-              formData.type === "Expense" ? "bg-teal-600 text-slate-900" : ""
+              formData.type === "Expense" ? "bg-teal-600 text-white" : ""
             }`}
             onClick={() => handleTypeChange("Expense")}
           >
@@ -45,7 +56,7 @@ const ExpenceTaskerFrom = () => {
           </div>
           <div
             className={`cursor-pointer text-center flex-1 px-4 py-2 ${
-              formData.type === "Income" ? "bg-teal-600 text-slate-900" : ""
+              formData.type === "Income" ? "bg-teal-600 text-white" : ""
             }`}
             onClick={() => handleTypeChange("Income")}
           >
@@ -70,14 +81,11 @@ const ExpenceTaskerFrom = () => {
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
             >
               <option value="">Select a category</option>
-              <option value="Education">Education</option>
-              <option value="Food">Food</option>
-              <option value="Health">Health</option>
-              <option value="Bill">Bill</option>
-              <option value="Insurance">Insurance</option>
-              <option value="Tax">Tax</option>
-              <option value="Transport">Transport</option>
-              <option value="Telephone">Telephone</option>
+              {categories[formData.type].map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -98,7 +106,7 @@ const ExpenceTaskerFrom = () => {
               value={formData.amount}
               onChange={handleInputChange}
               placeholder="Enter amount"
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
             />
           </div>
         </div>
@@ -118,13 +126,14 @@ const ExpenceTaskerFrom = () => {
               id="date"
               value={formData.date}
               onChange={handleInputChange}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
             />
           </div>
         </div>
 
         {/* Submit Button */}
         <button
+          onClick={()=>onSave(formData)}
           type="submit"
           className="mt-6 rounded-md bg-teal-600 px-8 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 w-full"
         >
@@ -135,4 +144,4 @@ const ExpenceTaskerFrom = () => {
   );
 };
 
-export default ExpenceTaskerFrom;
+export default ExpenceTaskerForm;
